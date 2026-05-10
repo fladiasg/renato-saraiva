@@ -10,72 +10,118 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Renato Saraiva</p>
-          <h1>Dashboard de Tráfego</h1>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegação principal">
+        <div class="brand">
+          <div class="brand-mark">RS</div>
+          <div>
+            <strong>Renato Saraiva</strong>
+            <span>Tráfego & Criativos</span>
+          </div>
         </div>
-        <div class="status" id="status">Carregando dados...</div>
-      </header>
 
-      <section class="controls" aria-label="Filtros">
-        <nav class="tabs" aria-label="Abas da dashboard">
-          <button class="tab is-active" data-view="ig">Distribuição</button>
-          <button class="tab" data-view="clube">Funil Clube</button>
-          <button class="tab" data-view="live">Live 12/05</button>
+        <nav class="side-nav">
+          <button class="nav-item is-active" data-view="ig"><span>▦</span>Distribuição</button>
+          <button class="nav-item" data-view="clube"><span>◉</span>Funil Clube</button>
+          <button class="nav-item" data-view="live"><span>▶</span>Live 12/05</button>
+          <button class="nav-item" data-view="all"><span>◆</span>Todos</button>
         </nav>
+      </aside>
 
-        <label class="select-label">
-          Período
-          <select id="period">
-            <option value="3">Últimos 3 dias</option>
-            <option value="7" selected>Últimos 7 dias</option>
-            <option value="14">Últimos 14 dias</option>
-            <option value="30">Últimos 30 dias</option>
-          </select>
-        </label>
-      </section>
-
-      <section class="hero-panel">
-        <div>
-          <p class="eyebrow" id="viewFilter">Campaign Name contém IG</p>
-          <h2 id="viewTitle">Distribuição de Conteúdo</h2>
-          <p id="viewDescription">Leitura de alcance, visitas, engajamento e retenção dos criativos de distribuição.</p>
-        </div>
-        <div class="hero-metric">
-          <span>Investimento</span>
-          <strong id="heroSpend">R$ 0,00</strong>
-        </div>
-      </section>
-
-      <section class="grid" id="cards" aria-label="Indicadores"></section>
-
-      <section class="analysis-grid">
-        <article class="panel">
-          <div class="panel-head">
-            <h3>Ranking de Criativos</h3>
-            <span id="rankingHint">Ordenado por Landing Page Views</span>
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="viewFilter">Campaign Name contém IG</p>
+            <h1 id="viewTitle">Distribuição de Conteúdo</h1>
+            <p id="viewDescription">Leitura de alcance, visitas, engajamento e retenção dos criativos de distribuição.</p>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr id="rankingHeader"></tr>
-              </thead>
-              <tbody id="rankingRows"></tbody>
-            </table>
-          </div>
-        </article>
 
-        <article class="panel">
-          <div class="panel-head">
-            <h3>Leitura Rápida</h3>
-            <span>Insights automáticos</span>
+          <div class="top-actions">
+            <div class="status" id="status">Carregando dados...</div>
+            <label class="select-label">
+              Período
+              <select id="period">
+                <option value="7" selected>Últimos 7 dias</option>
+                <option value="30">Últimos 30 dias</option>
+                <option value="all">Período todo</option>
+                <option value="custom">Data personalizada</option>
+              </select>
+            </label>
           </div>
-          <div class="insights" id="insights"></div>
-        </article>
-      </section>
-    </main>
+        </header>
+
+        <section class="mobile-tabs" aria-label="Abas da dashboard">
+          <button class="tab is-active" data-view="ig">Distribuição</button>
+          <button class="tab" data-view="clube">Clube</button>
+          <button class="tab" data-view="live">Live</button>
+          <button class="tab" data-view="all">Todos</button>
+        </section>
+
+        <section class="custom-dates" id="customDates" aria-label="Datas personalizadas">
+          <label>
+            Data inicial
+            <input type="date" id="startDate" />
+          </label>
+          <label>
+            Data final
+            <input type="date" id="endDate" />
+          </label>
+        </section>
+
+        <section class="kpi-strip" id="cards" aria-label="Indicadores principais"></section>
+
+        <section class="chart-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Evolução por data</h2>
+                <p>Mostra o comportamento diário dentro do período selecionado.</p>
+              </div>
+            </div>
+            <div class="bar-chart" id="dailyChart"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Funil do tráfego</h2>
+                <p>Ajuda o cliente a entender onde o volume cai no caminho até a ação.</p>
+              </div>
+            </div>
+            <div class="funnel" id="funnelChart"></div>
+          </article>
+        </section>
+
+        <section class="analysis-grid">
+          <article class="panel ranking-panel">
+            <div class="panel-head">
+              <div>
+                <h2>Resultado por criativo</h2>
+                <p id="rankingHint">Ordenado por engajamentos</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr id="rankingHeader"></tr>
+                </thead>
+                <tbody id="rankingRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Como ler</h2>
+                <p>Explicações simples para o cliente final.</p>
+              </div>
+            </div>
+            <div class="insights" id="insights"></div>
+          </article>
+        </section>
+      </main>
+    </div>
 
     <script src="./app.js"></script>
   </body>
