@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard Renato Saraiva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Renato Saraiva</p>
+          <h1>Dashboard de Tráfego</h1>
+        </div>
+        <div class="status" id="status">Carregando dados...</div>
+      </header>
+
+      <section class="controls" aria-label="Filtros">
+        <nav class="tabs" aria-label="Abas da dashboard">
+          <button class="tab is-active" data-view="ig">Distribuição</button>
+          <button class="tab" data-view="clube">Funil Clube</button>
+          <button class="tab" data-view="live">Live 12/05</button>
+        </nav>
+
+        <label class="select-label">
+          Período
+          <select id="period">
+            <option value="3">Últimos 3 dias</option>
+            <option value="7" selected>Últimos 7 dias</option>
+            <option value="14">Últimos 14 dias</option>
+            <option value="30">Últimos 30 dias</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="hero-panel">
+        <div>
+          <p class="eyebrow" id="viewFilter">Campaign Name contém IG</p>
+          <h2 id="viewTitle">Distribuição de Conteúdo</h2>
+          <p id="viewDescription">Leitura de alcance, visitas, engajamento e retenção dos criativos de distribuição.</p>
+        </div>
+        <div class="hero-metric">
+          <span>Investimento</span>
+          <strong id="heroSpend">R$ 0,00</strong>
+        </div>
+      </section>
+
+      <section class="grid" id="cards" aria-label="Indicadores"></section>
+
+      <section class="analysis-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Ranking de Criativos</h3>
+            <span id="rankingHint">Ordenado por Landing Page Views</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr id="rankingHeader"></tr>
+              </thead>
+              <tbody id="rankingRows"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h3>Leitura Rápida</h3>
+            <span>Insights automáticos</span>
+          </div>
+          <div class="insights" id="insights"></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
