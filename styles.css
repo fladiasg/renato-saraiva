@@ -307,7 +307,7 @@ input[type="date"] {
 }
 
 .chart-grid {
-  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
+  grid-template-columns: 1fr;
 }
 
 .analysis-grid {

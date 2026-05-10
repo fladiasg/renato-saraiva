@@ -3,46 +3,46 @@ const SHEET_NAME = "RAW_Meta_Trafego";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
 const views = {
-  ig: {
-    title: "Distribuição de Conteúdo",
-    filter: "IG",
-    filterLabel: "Campaign Name contém IG",
-    description: "Acompanha se os criativos estão gerando atenção, visitas e engajamento para conteúdos.",
-    rankingSort: "engagement",
-    rankingHint: "Ordenado pelos criativos com mais engajamento.",
-    mode: "distribution",
-  },
-  clube: {
-    title: "Funil de Leads - Clube",
-    filter: "CLUBE",
-    filterLabel: "Campaign Name contém CLUBE",
-    description: "Mostra o caminho entre clique, chegada na landing page e cadastro de lead para o Clube.",
-    rankingSort: "leads",
-    rankingHint: "Ordenado pelos criativos que mais geraram leads.",
-    mode: "club",
-  },
-  live: {
-    title: "Live 12/05 - Grupo WhatsApp",
-    filter: "LIVE",
-    filterLabel: "Campaign Name contém LIVE",
-    description: "Mede o interesse na live e o custo das pessoas que clicaram para entrar no WhatsApp.",
-    rankingSort: "outbound",
-    rankingHint: "Ordenado pelos criativos com mais cliques para WhatsApp.",
-    mode: "live",
-  },
   all: {
     title: "Visão Geral - Todos os Funis",
     filter: "",
-    filterLabel: "Todas as campanhas",
+    filterLabel: "Todos os funis",
     description: "Consolida distribuição, Clube e Live para comparar o desempenho geral do tráfego.",
     rankingSort: "spend",
     rankingHint: "Ordenado pelos criativos com maior investimento.",
     mode: "all",
   },
+  live: {
+    title: "Live 12/05",
+    filter: "LIVE",
+    filterLabel: "Live 12/05",
+    description: "Mede o volume de leads, custo por lead e visitas na landing page da live.",
+    rankingSort: "leads",
+    rankingHint: "Ordenado pelos criativos que mais geraram leads.",
+    mode: "live",
+  },
+  clube: {
+    title: "Funil de Leads - Clube",
+    filter: "CLUBE",
+    filterLabel: "Clube",
+    description: "Mostra o caminho entre clique, chegada na landing page e cadastro de lead para o Clube.",
+    rankingSort: "leads",
+    rankingHint: "Ordenado pelos criativos que mais geraram leads.",
+    mode: "club",
+  },
+  ig: {
+    title: "Distribuição de Conteúdo",
+    filter: "IG",
+    filterLabel: "Conteúdo",
+    description: "Acompanha se os criativos estão gerando atenção, cliques e engajamento para os conteúdos.",
+    rankingSort: "engagement",
+    rankingHint: "Ordenado pelos criativos com mais engajamento.",
+    mode: "distribution",
+  },
 };
 
 let rows = [];
-let currentView = "ig";
+let currentView = "all";
 
 const els = {
   status: document.querySelector("#status"),
@@ -55,7 +55,6 @@ const els = {
   viewTitle: document.querySelector("#viewTitle"),
   viewDescription: document.querySelector("#viewDescription"),
   cards: document.querySelector("#cards"),
-  dailyChart: document.querySelector("#dailyChart"),
   funnelChart: document.querySelector("#funnelChart"),
   rankingHint: document.querySelector("#rankingHint"),
   rankingHeader: document.querySelector("#rankingHeader"),
@@ -265,8 +264,8 @@ function cardSet(m) {
   if (currentView === "ig") {
     return [
       ...common,
-      kpi("Visitas", formatNumber(m.lpViews), "Pessoas que clicaram e realmente carregaram a página.", "↗", "primary"),
-      kpi("Custo por visita", formatCurrency(m.cplp), "Quanto custa, em média, levar uma pessoa até a página.", "R$", "secondary"),
+      kpi("Visitas", formatNumber(m.linkClicks), "Quantidade de cliques gerados pelos anúncios de conteúdo.", "↗", "primary"),
+      kpi("Custo por visita", formatCurrency(m.cpc), "Quanto custa, em média, cada clique gerado para o conteúdo.", "R$", "secondary"),
       kpi("Engajamentos", formatNumber(m.engagement), "Curtidas, comentários, salvamentos, compartilhamentos e interações no anúncio.", "★", "neutral"),
       kpi("Taxa de engajamento", formatPercent(m.engagementRate), "Percentual das impressões que viraram interação no anúncio.", "%", "neutral"),
       kpi("Post Saves", formatNumber(m.saves), "Salvamentos indicam que o conteúdo foi percebido como útil ou relevante.", "S", "neutral"),
@@ -279,10 +278,10 @@ function cardSet(m) {
   if (currentView === "clube") {
     return [
       ...common,
-      kpi("Link Clicks", formatNumber(m.linkClicks), "Pessoas que clicaram no link ou botão do anúncio.", "↗", "primary"),
-      kpi("LP Views", formatNumber(m.lpViews), "Cliques que conseguiram carregar a landing page.", "LP", "secondary"),
-      kpi("Leads", formatNumber(m.leads), "Pessoas que deixaram cadastro na landing page.", "L", "neutral"),
-      kpi("Custo por Lead", formatCurrency(m.cpLead), "Quanto custou, em média, cada cadastro gerado.", "R$", "neutral"),
+      kpi("Leads", formatNumber(m.leads), "Pessoas que deixaram cadastro na landing page.", "L", "primary"),
+      kpi("Custo por Lead", formatCurrency(m.cpLead), "Quanto custou, em média, cada cadastro gerado.", "R$", "secondary"),
+      kpi("LP Views", formatNumber(m.lpViews), "Quantidade de pessoas que visualizaram a landing page.", "LP", "neutral"),
+      kpi("Link Clicks", formatNumber(m.linkClicks), "Pessoas que clicaram no link ou botão do anúncio.", "↗", "neutral"),
       kpi("CTR Link", formatPercent(m.ctr), "Percentual das impressões que geraram clique no link.", "%", "neutral"),
       kpi("CPC Link", formatCurrency(m.cpc), "Quanto custou, em média, cada clique no link.", "R$", "neutral"),
       kpi("Taxa LP -> Lead", formatPercent(m.lpToLead), "Percentual de visitantes da página que viraram lead.", "%", "neutral"),
@@ -293,13 +292,13 @@ function cardSet(m) {
   if (currentView === "live") {
     return [
       ...common,
-      kpi("Clicks", formatNumber(m.clicks), "Todos os cliques registrados nos anúncios da live.", "↯", "primary"),
-      kpi("Link Clicks", formatNumber(m.linkClicks), "Cliques no link ou botão principal do anúncio.", "↗", "secondary"),
-      kpi("WhatsApp", formatNumber(m.outbound), "Cliques de saída para entrar no grupo ou acessar o WhatsApp.", "W", "neutral"),
-      kpi("Custo por WhatsApp", formatCurrency(m.outbound ? m.spend / m.outbound : 0), "Quanto custa cada clique de intenção para o WhatsApp.", "R$", "neutral"),
+      kpi("Leads", formatNumber(m.leads), "Pessoas que se cadastraram na landing page da live.", "L", "primary"),
+      kpi("Custo por Lead", formatCurrency(m.cpLead), "Quanto custou, em média, cada lead da live.", "R$", "secondary"),
+      kpi("LP Views", formatNumber(m.lpViews), "Quantidade de pessoas que visualizaram a landing page.", "LP", "neutral"),
+      kpi("Taxa LP -> Lead", formatPercent(m.lpToLead), "Percentual de visitantes da página que viraram lead.", "%", "neutral"),
+      kpi("Link Clicks", formatNumber(m.linkClicks), "Cliques no link ou botão principal do anúncio.", "↗", "neutral"),
       kpi("CTR Link", formatPercent(m.ctr), "Percentual das impressões que viraram clique no link.", "%", "neutral"),
       kpi("CPC Link", formatCurrency(m.cpc), "Custo médio por clique no link da live.", "R$", "neutral"),
-      kpi("Taxa Link -> WhatsApp", formatPercent(m.linkClicks ? m.outbound / m.linkClicks : 0), "Mostra quantos cliques no link viraram saída para WhatsApp.", "%", "neutral"),
       kpi("Retenção 50%", formatPercent(m.retention50), "Sinal de quanto os vídeos estão segurando atenção.", "50", "neutral"),
     ];
   }
@@ -317,48 +316,6 @@ function cardSet(m) {
   ];
 }
 
-function dailyGroups(data) {
-  const groups = new Map();
-  for (const row of data) {
-    const day = parseDate(row.Day);
-    if (!day) continue;
-    const key = dateKey(day);
-    const item = groups.get(key) || { date: day, spend: 0, lpViews: 0, leads: 0, outbound: 0, engagement: 0 };
-    item.spend += number(row["Amount Spent"]);
-    item.lpViews += number(row["Landing Page Views"]);
-    item.leads += number(row.Leads);
-    item.outbound += number(row["Outbound Clicks"]);
-    item.engagement += number(row["Inline Post Engagement in Ad"]);
-    groups.set(key, item);
-  }
-  return [...groups.values()].sort((a, b) => a.date - b.date);
-}
-
-function renderDailyChart(data) {
-  const grouped = dailyGroups(data).slice(-14);
-  const metric = currentView === "clube" ? "leads" : currentView === "live" ? "outbound" : "engagement";
-  const label = currentView === "clube" ? "leads" : currentView === "live" ? "WhatsApp" : "engaj.";
-  const max = Math.max(...grouped.map((item) => item[metric]), 1);
-
-  if (!grouped.length) {
-    els.dailyChart.innerHTML = `<div class="insight">Sem dados para montar o gráfico neste período.</div>`;
-    return;
-  }
-
-  els.dailyChart.innerHTML = grouped
-    .map((item) => {
-      const height = Math.max((item[metric] / max) * 100, 3);
-      return `
-        <div class="day-bar">
-          <div class="bar-track"><div class="bar-fill" style="height:${height}%"></div></div>
-          <strong>${formatNumber(item[metric])}</strong>
-          <span>${formatShortDate(item.date)} · ${label}</span>
-        </div>
-      `;
-    })
-    .join("");
-}
-
 function renderFunnel(m) {
   const steps =
     currentView === "clube"
@@ -372,8 +329,8 @@ function renderFunnel(m) {
         ? [
             ["Impressões", m.impressions],
             ["Link Clicks", m.linkClicks],
-            ["Outbound WhatsApp", m.outbound],
             ["LP Views", m.lpViews],
+            ["Leads", m.leads],
           ]
         : [
             ["Impressões", m.impressions],
@@ -438,7 +395,7 @@ function renderRanking(data) {
     currentView === "clube"
       ? ["Criativo", "Gasto", "Impressões", "Link Clicks", "LP Views", "Leads", "CPL", "CTR"]
       : currentView === "live"
-        ? ["Criativo", "Gasto", "Impressões", "Clicks", "Link Clicks", "WhatsApp", "Custo", "CTR"]
+        ? ["Criativo", "Gasto", "Impressões", "LP Views", "Leads", "CPL", "Link Clicks", "CTR"]
         : ["Criativo", "Gasto", "Impressões", "Link Clicks", "LP Views", "Engaj.", "Saves", "CTR"];
 
   els.rankingHeader.innerHTML = headers.map((item) => `<th>${item}</th>`).join("");
@@ -455,7 +412,7 @@ function renderRanking(data) {
         return `<tr><td>${item.name}</td><td>${formatCurrency(item.spend)}</td><td>${formatNumber(item.impressions)}</td><td>${formatNumber(item.linkClicks)}</td><td>${formatNumber(item.lpViews)}</td><td>${formatNumber(item.leads)}</td><td>${formatCurrency(item.leads ? item.spend / item.leads : 0)}</td><td>${formatPercent(ctr)}</td></tr>`;
       }
       if (currentView === "live") {
-        return `<tr><td>${item.name}</td><td>${formatCurrency(item.spend)}</td><td>${formatNumber(item.impressions)}</td><td>${formatNumber(item.clicks)}</td><td>${formatNumber(item.linkClicks)}</td><td>${formatNumber(item.outbound)}</td><td>${formatCurrency(item.outbound ? item.spend / item.outbound : 0)}</td><td>${formatPercent(ctr)}</td></tr>`;
+        return `<tr><td>${item.name}</td><td>${formatCurrency(item.spend)}</td><td>${formatNumber(item.impressions)}</td><td>${formatNumber(item.lpViews)}</td><td>${formatNumber(item.leads)}</td><td>${formatCurrency(item.leads ? item.spend / item.leads : 0)}</td><td>${formatNumber(item.linkClicks)}</td><td>${formatPercent(ctr)}</td></tr>`;
       }
       return `<tr><td>${item.name}</td><td>${formatCurrency(item.spend)}</td><td>${formatNumber(item.impressions)}</td><td>${formatNumber(item.linkClicks)}</td><td>${formatNumber(item.lpViews)}</td><td>${formatNumber(item.engagement)}</td><td>${formatNumber(item.saves)}</td><td>${formatPercent(ctr)}</td></tr>`;
     })
@@ -479,8 +436,8 @@ function renderInsights(m, data) {
       messages.push(`<strong>Custo por Lead</strong> está em ${formatCurrency(m.cpLead)}. É quanto custa, em média, cada cadastro na landing page.`);
       messages.push(`<strong>Taxa LP -> Lead</strong> está em ${formatPercent(m.lpToLead)}. Ela mostra se a página está convencendo quem chegou nela.`);
     } else if (currentView === "live") {
-      messages.push(`<strong>Custo por WhatsApp</strong> está em ${formatCurrency(m.outbound ? m.spend / m.outbound : 0)}. É o custo por pessoa que demonstrou intenção de entrar no grupo.`);
-      messages.push(`<strong>Taxa Link -> WhatsApp</strong> está em ${formatPercent(m.linkClicks ? m.outbound / m.linkClicks : 0)}. Ela mostra se o clique está chegando na ação esperada.`);
+      messages.push(`<strong>Custo por Lead</strong> está em ${formatCurrency(m.cpLead)}. É o custo médio por cadastro gerado na landing page da live.`);
+      messages.push(`<strong>Taxa LP -> Lead</strong> está em ${formatPercent(m.lpToLead)}. Ela mostra se a página está transformando visitantes em leads.`);
     } else {
       messages.push(`<strong>Visão Todos</strong> serve para comparar o volume total e identificar quais criativos concentram mais verba e resultado.`);
       messages.push(`<strong>Resultado por criativo</strong> mostra quais anúncios merecem escala, ajuste ou pausa.`);
@@ -502,7 +459,6 @@ function render() {
   els.rankingHint.textContent = view.rankingHint;
   els.cards.innerHTML = cardSet(m).join("");
 
-  renderDailyChart(data);
   renderFunnel(m);
   renderRanking(data);
   renderInsights(m, data);

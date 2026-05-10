@@ -21,10 +21,10 @@
         </div>
 
         <nav class="side-nav">
-          <button class="nav-item is-active" data-view="ig"><span>▦</span>Distribuição</button>
-          <button class="nav-item" data-view="clube"><span>◉</span>Funil Clube</button>
+          <button class="nav-item is-active" data-view="all"><span>◆</span>Todos</button>
           <button class="nav-item" data-view="live"><span>▶</span>Live 12/05</button>
-          <button class="nav-item" data-view="all"><span>◆</span>Todos</button>
+          <button class="nav-item" data-view="clube"><span>◉</span>Funil Clube</button>
+          <button class="nav-item" data-view="ig"><span>▦</span>Distribuição</button>
         </nav>
       </aside>
 
@@ -32,8 +32,8 @@
         <header class="topbar">
           <div>
             <p class="eyebrow" id="viewFilter">Campaign Name contém IG</p>
-            <h1 id="viewTitle">Distribuição de Conteúdo</h1>
-            <p id="viewDescription">Leitura de alcance, visitas, engajamento e retenção dos criativos de distribuição.</p>
+            <h1 id="viewTitle">Visão Geral - Todos os Funis</h1>
+            <p id="viewDescription">Consolida distribuição, Clube e Live para comparar o desempenho geral do tráfego.</p>
           </div>
 
           <div class="top-actions">
@@ -51,10 +51,10 @@
         </header>
 
         <section class="mobile-tabs" aria-label="Abas da dashboard">
-          <button class="tab is-active" data-view="ig">Distribuição</button>
-          <button class="tab" data-view="clube">Clube</button>
+          <button class="tab is-active" data-view="all">Todos</button>
           <button class="tab" data-view="live">Live</button>
-          <button class="tab" data-view="all">Todos</button>
+          <button class="tab" data-view="clube">Clube</button>
+          <button class="tab" data-view="ig">Distribuição</button>
         </section>
 
         <section class="custom-dates" id="customDates" aria-label="Datas personalizadas">
@@ -71,16 +71,6 @@
         <section class="kpi-strip" id="cards" aria-label="Indicadores principais"></section>
 
         <section class="chart-grid">
-          <article class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>Evolução por data</h2>
-                <p>Mostra o comportamento diário dentro do período selecionado.</p>
-              </div>
-            </div>
-            <div class="bar-chart" id="dailyChart"></div>
-          </article>
-
           <article class="panel">
             <div class="panel-head">
               <div>
