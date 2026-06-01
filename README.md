@@ -14,6 +14,7 @@ As campanhas são separadas por `Campaign Name`:
 - `IG`: Distribuição de Conteúdo
 - `CLUBE`: Funil Clube
 - `LIVE`: Live 12/05
+- `Formulário Evento presencial 10/06`: Evento presencial 10/06
 
 ## Publicação no GitHub Pages
 
@@ -30,4 +31,3 @@ As campanhas são separadas por `Campaign Name`:
 ## Atenção
 
 Para o site conseguir ler o Sheets fora da sua conta Google, a planilha precisa estar com leitura liberada por link ou publicada na web.
-

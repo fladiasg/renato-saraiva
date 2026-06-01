@@ -21,6 +21,15 @@ const views = {
     rankingHint: "Ordenado pelos criativos que mais geraram leads.",
     mode: "live",
   },
+  evento: {
+    title: "Formulário Evento Presencial 10/06",
+    filter: "FORMULÁRIO EVENTO PRESENCIAL 10/06",
+    filterLabel: "Evento Presencial 10/06",
+    description: "Acompanha o investimento, os cliques e os cadastros gerados para o formulário do evento presencial de 10/06.",
+    rankingSort: "leads",
+    rankingHint: "Ordenado pelos criativos que mais geraram leads para o evento presencial.",
+    mode: "lead-form",
+  },
   clube: {
     title: "Funil de Leads - Clube",
     filter: "CLUBE",
@@ -179,14 +188,22 @@ function getDateRange() {
   return { start, end };
 }
 
+function normalizeText(value) {
+  return String(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+}
+
 function filteredRows() {
   const view = views[currentView];
   const { start, end } = getDateRange();
 
   return rows.filter((row) => {
     const day = parseDate(row.Day);
-    const campaign = String(row["Campaign Name"]).toUpperCase();
-    const matchesView = view.filter ? campaign.includes(view.filter) : true;
+    const campaign = normalizeText(row["Campaign Name"]);
+    const viewFilter = normalizeText(view.filter);
+    const matchesView = viewFilter ? campaign.includes(viewFilter) : true;
     return day && day >= start && day <= end && matchesView;
   });
 }
@@ -275,7 +292,7 @@ function cardSet(m) {
     ];
   }
 
-  if (currentView === "clube") {
+  if (currentView === "clube" || currentView === "evento") {
     return [
       ...common,
       kpi("Leads", formatNumber(m.leads), "Pessoas que deixaram cadastro na landing page.", "L", "primary"),
@@ -318,7 +335,7 @@ function cardSet(m) {
 
 function renderFunnel(m) {
   const steps =
-    currentView === "clube"
+    currentView === "clube" || currentView === "evento"
       ? [
           ["Impressões", m.impressions],
           ["Link Clicks", m.linkClicks],
@@ -392,7 +409,7 @@ function groupedCreatives(data) {
 function renderRanking(data) {
   const rows = groupedCreatives(data);
   const headers =
-    currentView === "clube"
+    currentView === "clube" || currentView === "evento"
       ? ["Criativo", "Gasto", "Impressões", "Link Clicks", "LP Views", "Leads", "CPL", "CTR"]
       : currentView === "live"
         ? ["Criativo", "Gasto", "Impressões", "LP Views", "Leads", "CPL", "Link Clicks", "CTR"]
@@ -408,7 +425,7 @@ function renderRanking(data) {
   els.rankingRows.innerHTML = rows
     .map((item) => {
       const ctr = item.impressions ? item.linkClicks / item.impressions : 0;
-      if (currentView === "clube") {
+      if (currentView === "clube" || currentView === "evento") {
         return `<tr><td>${item.name}</td><td>${formatCurrency(item.spend)}</td><td>${formatNumber(item.impressions)}</td><td>${formatNumber(item.linkClicks)}</td><td>${formatNumber(item.lpViews)}</td><td>${formatNumber(item.leads)}</td><td>${formatCurrency(item.leads ? item.spend / item.leads : 0)}</td><td>${formatPercent(ctr)}</td></tr>`;
       }
       if (currentView === "live") {
@@ -435,6 +452,9 @@ function renderInsights(m, data) {
     } else if (currentView === "clube") {
       messages.push(`<strong>Custo por Lead</strong> está em ${formatCurrency(m.cpLead)}. É quanto custa, em média, cada cadastro na landing page.`);
       messages.push(`<strong>Taxa LP -> Lead</strong> está em ${formatPercent(m.lpToLead)}. Ela mostra se a página está convencendo quem chegou nela.`);
+    } else if (currentView === "evento") {
+      messages.push(`<strong>Custo por Lead</strong> está em ${formatCurrency(m.cpLead)}. É o custo médio por inscrição no formulário do evento presencial.`);
+      messages.push(`<strong>Taxa LP -> Lead</strong> está em ${formatPercent(m.lpToLead)}. Ela mostra se a página/formulário está convertendo visitantes em inscritos.`);
     } else if (currentView === "live") {
       messages.push(`<strong>Custo por Lead</strong> está em ${formatCurrency(m.cpLead)}. É o custo médio por cadastro gerado na landing page da live.`);
       messages.push(`<strong>Taxa LP -> Lead</strong> está em ${formatPercent(m.lpToLead)}. Ela mostra se a página está transformando visitantes em leads.`);
